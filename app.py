@@ -1,7 +1,22 @@
 from flask import Flask, render_template
 from flask import url_for
+from flask_sqlalchemy import SQLAlchemy  #导入扩展类
+import os
+import sys
+
+WIN = sys.platform.startswith('win')
+if WIN:   #如果是windows系统，使用三个斜线
+    prefix = 'sqlite:///'
+else:     #否则使用四个斜线
+    prefxi = 'sqlite:///'
+
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'data.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
+# 在扩展类实例化前加载配置
+db = SQLAlchemy(app)
+
 
 @app.route('/')
 def index():
